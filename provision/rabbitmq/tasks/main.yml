@@ -1,0 +1,16 @@
+- name: assure consistent apt list repo state
+  shell: sudo rm /var/lib/apt/lists/archive* -vf && sudo rm /var/lib/apt/lists/lock 
+
+- name: Install rabbitmq apt key
+  apt_key: url=https://www.rabbitmq.com/rabbitmq-signing-key-public.asc state=present validate_certs=no
+
+- name: Add Zato repository
+  apt_repository: repo='deb http://www.rabbitmq.com/debian/ testing main' state=present
+
+- name: Install required packages
+  apt: pkg={{ item }} state=installed update_cache=yes
+  with_items:
+    - ntp
+    - git
+    - vim 
+    - rabbitmq-server
